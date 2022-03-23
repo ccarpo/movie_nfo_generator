@@ -6,6 +6,7 @@ from os.path import relpath, basename, splitext, join, exists
 from threading import Lock
 
 from requests import HTTPError
+from pymediainfo import MediaInfo
 
 from os.path import dirname, realpath
 import sys
@@ -24,7 +25,7 @@ from movie_nfo_generator.utilities import (
 
 
 _UI_LOCK = Lock()
-_workers = ThreadPoolExecutor(max_workers=2)
+_workers = ThreadPoolExecutor(max_workers=1)
 
 #: Media formats
 FORMATS = [_format.lower().strip() for _format in INI.get("General", "formats").split()]
@@ -45,13 +46,15 @@ def nfo_movie(media_filepath, movie_set="", sorttitle=""):
 
     nfo_fields, nfo_link = tmdb.get_movie_infos(short_title, year)
 
+    media_info = MediaInfo.parse(media_filepath+".mkv")    
+
     with _UI_LOCK:
         print(f'Creating NFO file for "{media_filepath}"')
-        nfo_fields["title"] = choose_title(long_title, nfo_fields["title"])
+        nfo_fields["title"] = choose_title(short_title, nfo_fields["title"])
     nfo_fields["set"] = movie_set
     nfo_fields["sorttitle"] = sorttitle
 
-    write_nfo("movie", nfo_fields, media_filepath, link=nfo_link)
+    write_nfo("movie", nfo_fields, media_filepath, media_info, link=nfo_link)
 
 
 def nfo_tv_show(media_filedir):
@@ -66,6 +69,8 @@ def nfo_tv_show(media_filedir):
     nfo_fields, nfo_link, scraper_id, original_language = tmdb.get_tv_show_infos(
         title, year
     )
+    
+    
 
     with _UI_LOCK:
         print(f'Creating NFO file for "{media_filedir}"')
@@ -198,7 +203,7 @@ def walk_tv_shows():
 def _run_command():
     """Entrypoint"""
     walk_movies()
-    walk_tv_shows()
+    #walk_tv_shows()
 
 
 if __name__ == "__main__":

@@ -44,18 +44,16 @@ def _search(title, search_method, title_key, date_key, year_query, year):
             if year_query in search_params:
                 del search_params[year_query]
                 continue
-            search_params["query"] = input("No matching result, enter title: ")
-
-    return choose_result(
-        [
-            {
-                "title": result[title_key],
-                "year": result[date_key].split("-", 1)[0],
-                "id": result["id"],
-            }
-            for result in results
-        ]
-    )
+            search_params["query"] = input("No matching result, enter title: ")    
+    results_to_choose = []
+    for result in results:
+        if date_key in result:
+            results_to_choose.append({
+                    "title": result[title_key],
+                    "year": result[date_key].split("-", 1)[0],
+                    "id": result["id"],
+                })
+    return choose_result(results_to_choose)
 
 
 def search_movie(title, year):
@@ -143,6 +141,7 @@ def get_movie_infos(title, year):
         "plot": infos["overview"],
         "outline": infos["overview"],
         "tagline": infos["tagline"],
+        "runtime": infos["runtime"],
         "genre": _response_names_only(infos["genres"]),
         "studio": _response_names_only(infos["production_companies"]),
         "country": _response_names_only(infos["production_countries"]),

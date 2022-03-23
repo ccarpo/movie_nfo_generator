@@ -1,5 +1,6 @@
 """Utilities"""
 from os.path import basename
+import re
 
 
 def choose_result(results):
@@ -112,7 +113,8 @@ def filepath_to_titles(media_filepath, prefixed=False):
     media_filename = basename(media_filepath)
     short_title = filter_filename(media_filename, True, prefixed)
     long_title = filter_filename(media_filename, False, prefixed)
-
+    print(short_title)
+    print(long_title)
     if "[" in long_title:
         title, suffix = long_title.split("[", 1)
         if "," in suffix:
@@ -124,6 +126,9 @@ def filepath_to_titles(media_filepath, prefixed=False):
             year = suffix.strip(" ]")
     else:
         year = ""
+    findings = re.search(r'\((\d{4})\)', long_title)
+    if findings:
+        year = findings.group(1)
     return short_title, long_title, year
 
 

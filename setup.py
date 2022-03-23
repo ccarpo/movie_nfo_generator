@@ -33,7 +33,8 @@ PACKAGE_INFO = dict(
     install_requires=[
         "lxml",
         "tmdbsimple",
-        "requests"
+        "requests",
+		"pymediainfo"
     ],
     setup_requires=["setuptools"],
     entry_points={
