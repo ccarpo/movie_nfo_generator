@@ -33,6 +33,6 @@ def write_nfo(root_name, nfo_fields, media_filename, link="", filename=None):
         filename, encoding="utf-8", xml_declaration=True, pretty_print=True
     )
 
-    if link:
-        with open(filename, "at") as nfo_file:
-            nfo_file.write(link)
+    #if link:
+    #    with open(filename, "at") as nfo_file:
+    #        nfo_file.write(link)
