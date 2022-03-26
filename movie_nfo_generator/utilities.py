@@ -113,8 +113,6 @@ def filepath_to_titles(media_filepath, prefixed=False):
     media_filename = basename(media_filepath)
     short_title = filter_filename(media_filename, True, prefixed)
     long_title = filter_filename(media_filename, False, prefixed)
-    print(short_title)
-    print(long_title)
     if "[" in long_title:
         title, suffix = long_title.split("[", 1)
         if "," in suffix:
